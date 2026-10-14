@@ -1,0 +1,345 @@
+/* ==========================================================
+   Discord Dark — thème SillyTavern 1.19 (Hydra wave)
+   Inspiré de Discord mobile (iPhone, mode sombre / OLED) :
+   fond noir, avatars ronds à gauche, nom en gras + heure grise,
+   messages sans bulles, barre de saisie en pilule, accents blurple.
+   Léger : aucun flou (backdrop-filter), aucune animation ajoutée.
+   ========================================================== */
+:root{
+  --dc-bg:#000000;          /* fond du chat / page            */
+  --dc-header:#000000;      /* barre du haut                  */
+  --dc-rail:#131318;        /* fond des panneaux (sombre)     */
+  --dc-panel:#1c1d23;       /* panneaux / tiroirs             */
+  --dc-card:#24252c;        /* blocs dans les panneaux        */
+  --dc-hover:#2c2d35;       /* survol / sélection             */
+  --dc-field:#111216;       /* champs de texte des réglages   */
+  --dc-input:#181921;       /* pilule de saisie + ronds       */
+  --dc-line:#2a2b31;        /* séparateurs                    */
+  --dc-text:#dbdee1;        /* texte des messages             */
+  --dc-name:#f2f3f5;        /* noms                           */
+  --dc-muted:#949ba4;       /* heure, icônes discrètes        */
+  --dc-icon:#c7c8ce;        /* icônes des boutons ronds       */
+  --dc-placeholder:#80839b; /* « Message… »                    */
+  --dc-italic:#b5bac1;      /* *actions* en italique          */
+  --dc-link:#00a8fc;
+  --dc-blurple:#5865f2;
+  --dc-blurple-hover:#4752c4;
+  --dc-green:#23a55a;       /* pastille « en ligne »          */
+  --dc-dot:block;           /* mettre none pour cacher la pastille */
+  --dc-avatar:40px;
+  --dc-btn:40px;            /* boutons ronds de la barre      */
+  --dc-font:"gg sans","Noto Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mainFontFamily:var(--dc-font)!important;
+}
+
+/* ---------- Page / fond ---------- */
+html,body{background:var(--dc-bg)!important;font-family:var(--dc-font);}
+#bg1,#bg_custom{background:var(--dc-bg)!important;background-image:none!important;}
+#sheld{background:var(--dc-bg)!important;}
+body #chat{
+  background:var(--dc-bg)!important;
+  border:none!important;box-shadow:none!important;border-radius:0!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:6px 0 10px!important;
+  scrollbar-width:thin;scrollbar-color:#2b2d31 transparent;
+}
+#chat::-webkit-scrollbar{width:4px;}
+#chat::-webkit-scrollbar-thumb{background:#2b2d31;border-radius:4px;}
+
+/* ---------- Messages : style Discord (pas de bulle) ---------- */
+body #chat .mes{
+  display:flex!important;flex-direction:row!important;align-items:flex-start!important;
+  background:transparent!important;background-image:none!important;
+  border:none!important;border-radius:0!important;box-shadow:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  margin:0!important;
+  padding:4px 12px 5px 16px!important;
+  font-family:var(--dc-font);
+}
+body #chat .mes:not(.smallSysMes):active{background:rgba(255,255,255,.025)!important;}
+body #chat .mes::before,body #chat .mes::after{display:none!important;}
+
+/* Avatar rond à gauche + pastille verte */
+body #chat .mes .mesAvatarWrapper{
+  flex:0 0 var(--dc-avatar)!important;width:var(--dc-avatar)!important;min-width:var(--dc-avatar)!important;
+  padding:2px 0 0!important;margin:0!important;gap:2px;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+}
+body #chat .mes.last_mes .mesAvatarWrapper{padding-bottom:0!important;}
+/* Dernier message d'un perso : petite rangée pour les swipes ‹ 1/2 › sous le texte */
+body #chat .mes.last_mes:not([is_user="true"]):not(.smallSysMes){padding-bottom:30px!important;}
+body #chat .mes .avatar{
+  position:relative!important;flex:0 0 auto!important;
+  width:var(--dc-avatar)!important;height:var(--dc-avatar)!important;
+  min-width:var(--dc-avatar)!important;max-width:var(--dc-avatar)!important;
+  border-radius:50%!important;overflow:visible!important;
+  border:none!important;box-shadow:none!important;outline:none!important;background:transparent!important;
+}
+/* :not(#dc-x) = priorité renforcée (passe devant « No Crop Avatar » : avatar rond recadré comme Discord) */
+body:not(#dc-x) #chat .mes .avatar img{
+  width:var(--dc-avatar)!important;height:var(--dc-avatar)!important;
+  max-width:var(--dc-avatar)!important;max-height:var(--dc-avatar)!important;
+  border-radius:50%!important;object-fit:cover!important;object-position:center top;
+  border:none!important;box-shadow:none!important;outline:none!important;aspect-ratio:1/1!important;
+}
+body #chat .mes .avatar::after{
+  content:"";display:var(--dc-dot);position:absolute;right:-3px;bottom:-3px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--dc-green);border:3px solid var(--dc-bg);pointer-events:none;
+}
+
+/* Petits compteurs ST sous l'avatar : discrets */
+body #chat .mes .mesIDDisplay,
+body #chat .mes .mes_timer,
+body #chat .mes .tokenCounterDisplay{
+  font-size:10px!important;font-weight:500!important;color:#6d6f78!important;opacity:1!important;
+  line-height:1.2;margin-top:2px;
+}
+
+/* Bloc texte */
+body #chat .mes .mes_block{
+  padding:0 0 0 12px!important;margin:0!important;min-width:0;flex:1 1 auto;
+  background:transparent!important;border:none!important;box-shadow:none!important;
+}
+body #chat .mes .ch_name{
+  min-height:0!important;align-items:center!important;margin:0!important;padding:0!important;
+  line-height:1.25!important;
+}
+body #chat .mes .ch_name > .flex-container{min-width:0;overflow:hidden;}
+body #chat .mes .ch_name .alignItemsBaseline{min-width:0;flex-wrap:nowrap!important;gap:0!important;overflow:hidden;}
+body #chat .mes .name_text{
+  font-family:var(--dc-font)!important;
+  font-size:calc(var(--mainFontSize) * 1.02)!important;font-weight:700!important;
+  color:var(--dc-name)!important;text-transform:none!important;letter-spacing:0!important;
+  text-shadow:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;
+}
+body #chat .mes .timestamp{
+  display:inline-block!important;
+  font-family:var(--dc-font)!important;
+  font-size:calc(var(--mainFontSize) * 0.76)!important;font-weight:500!important;
+  color:var(--dc-muted)!important;opacity:1!important;
+  margin-left:8px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:2;min-width:0;
+}
+body #chat .mes .timestamp-icon{display:none!important;}
+body #chat .mes .mes_ghost{color:var(--dc-muted)!important;margin-left:6px;}
+
+body #chat .mes .mes_text{
+  font-family:var(--dc-font)!important;
+  color:var(--dc-text)!important;
+  font-weight:400!important;
+  line-height:1.375!important;
+  padding:1px 0 0!important;margin:0!important;
+  background:transparent!important;border:none!important;box-shadow:none!important;border-radius:0!important;
+  text-shadow:none!important;
+}
+body #chat .mes .mes_text p{margin:0 0 .35em!important;}
+body #chat .mes .mes_text p:last-child{margin-bottom:0!important;}
+body #chat .mes .mes_text em,body #chat .mes .mes_text i{color:var(--dc-italic);}
+body #chat .mes .mes_text strong,body #chat .mes .mes_text b{color:#f2f3f5;font-weight:700;}
+body #chat .mes .mes_text q{color:#f2f3f5;}
+body #chat .mes .mes_text a{color:var(--dc-link)!important;text-decoration:none;}
+body #chat .mes .mes_text blockquote{
+  margin:4px 0!important;padding:0 0 0 12px!important;
+  border-left:4px solid #4e5058!important;border-radius:4px 0 0 4px;background:none!important;
+}
+body #chat .mes .mes_text code{
+  background:#2b2d31!important;color:#dbdee1!important;border:1px solid #1e1f22!important;
+  border-radius:4px;padding:0 4px;
+}
+body #chat .mes .mes_text pre{
+  background:#2b2d31!important;border:1px solid #1e1f22!important;border-radius:6px;
+}
+body #chat .mes .mes_text pre code{border:none!important;}
+body #chat .mes .mes_text hr{border-color:var(--dc-line);opacity:1;}
+
+/* Messages système compacts (« smallSysMes ») */
+body #chat .mes.smallSysMes{padding:6px 16px!important;justify-content:center!important;}
+body #chat .mes.smallSysMes .mes_text{color:var(--dc-muted)!important;font-size:calc(var(--mainFontSize)*.85);}
+
+/* Boutons d'action du message : discrets mais utilisables */
+body #chat .mes .mes_buttons{color:var(--dc-muted)!important;flex-shrink:0;margin-left:6px;}
+body #chat .mes .mes_buttons .mes_button{color:var(--dc-muted)!important;padding:4px 5px!important;font-size:calc(var(--mainFontSize)*1.05);}
+body #chat .mes .extraMesButtons{background:transparent;}
+body #chat .mes .mes_edit_buttons .menu_button{
+  background:var(--dc-input)!important;border:none!important;color:var(--dc-icon)!important;
+  border-radius:8px!important;filter:none!important;
+}
+body #chat .mes .mes_edit_buttons .mes_edit_done{background:var(--dc-blurple)!important;color:#fff!important;}
+body #chat .mes .edit_textarea{
+  background:var(--dc-input)!important;color:var(--dc-text)!important;
+  border:1px solid var(--dc-line)!important;border-radius:8px!important;padding:8px 10px!important;
+  font-family:var(--dc-font)!important;
+}
+
+/* Swipes : alignés sous le texte (gauche) et à droite, sans chevaucher l'avatar */
+body #chat .mes .swipe_left{left:62px!important;bottom:4px!important;}
+body #chat .mes .swipeRightBlock{right:6px!important;bottom:2px!important;}
+body #chat .swipe_left,body #chat .swipe_right{color:var(--dc-muted)!important;font-size:18px!important;}
+body #chat .swipes-counter{color:var(--dc-muted)!important;font-family:var(--dc-font)!important;}
+body #chat .swipe_left:active,body #chat .swipe_right:active{color:#fff!important;}
+
+/* Réflexion (reasoning) */
+body #chat .mes_reasoning_details{
+  background:#111216!important;border:1px solid var(--dc-line)!important;border-radius:8px!important;margin:4px 0!important;
+}
+body #chat .mes_reasoning{color:var(--dc-muted)!important;}
+
+/* Dernier message dans le contexte : trait discret */
+body #chat .lastInContext{border-top:1px dashed #3f4147!important;}
+
+/* ---------- Barre du haut ---------- */
+body #top-bar#top-bar{ /* id doublé : passe devant le style « no-blur » de ST */
+  background:var(--dc-header)!important;
+  box-shadow:none!important;border:none!important;border-bottom:1px solid #16171b!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body #top-settings-holder .drawer-icon,
+body #top-settings-holder .drawer-toggle .fa-solid{color:#b5bac1!important;opacity:1!important;filter:none!important;}
+body #top-settings-holder .drawer-icon.openIcon{color:#ffffff!important;}
+
+/* ---------- Barre de saisie : pilule + boutons ronds ---------- */
+body #form_sheld{background:var(--dc-bg)!important;}
+body #form_sheld #send_form{
+  background:var(--dc-bg)!important;border:none!important;border-radius:0!important;
+  box-shadow:none!important;outline:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:6px 4px 8px!important;
+}
+body #send_form:has(#send_textarea:focus-visible){outline:none!important;border:none!important;}
+body #nonQRFormItems{align-items:flex-end!important;column-gap:8px!important;padding:0 6px!important;}
+body #leftSendForm,body #rightSendForm{align-items:center;gap:8px;flex-wrap:nowrap!important;padding:0!important;}
+
+body #leftSendForm > div,
+body #rightSendForm > div:not(.mes_stop){
+  width:var(--dc-btn)!important;height:var(--dc-btn)!important;
+  min-width:var(--dc-btn);
+  border-radius:50%!important;
+  background:var(--dc-input)!important;
+  color:var(--dc-icon)!important;opacity:1!important;filter:none!important;
+  font-size:calc(var(--dc-btn) * .45)!important;
+  display:flex;align-items:center;justify-content:center;margin:0!important;
+}
+body #leftSendForm > div[style*="display: none"],
+body #rightSendForm > div[style*="display: none"]{display:none!important;}
+body #options_button{margin-left:0!important;}
+body #options_button::before{content:"\2b"!important;} /* icône « + » comme Discord (même menu qu'avant) */
+body #rightSendForm > #send_but{
+  background:var(--dc-blurple)!important;color:#ffffff!important;
+}
+body #rightSendForm > #send_but:active{background:var(--dc-blurple-hover)!important;}
+body #send_form .mes_stop{
+  width:var(--dc-btn)!important;height:var(--dc-btn)!important;border-radius:50%!important;
+  background:#da373c!important;color:#fff!important;opacity:1!important;
+  align-items:center;justify-content:center;font-size:calc(var(--dc-btn) * .45)!important;padding:0!important;
+}
+
+body #send_textarea{
+  background:var(--dc-input)!important;
+  color:var(--dc-text)!important;
+  border:none!important;border-top:none!important;outline:none!important;box-shadow:none!important;
+  border-radius:calc(var(--dc-btn) / 2)!important;
+  clip-path:none!important;text-shadow:none!important;
+  min-height:var(--dc-btn)!important;
+  padding:9px 16px!important;
+  line-height:22px!important;
+  font-family:var(--dc-font)!important;
+  font-size:max(16px, var(--mainFontSize))!important;  /* 16px : pas de zoom auto sur iPhone */
+  margin:0!important;
+  align-self:flex-end;
+  transition:none!important;
+}
+body #send_textarea::placeholder{color:var(--dc-placeholder)!important;opacity:1!important;}
+
+/* Menus « + » (options / extensions) */
+body #options .options-content,
+body #extensionsMenu,
+body .list-group{
+  background:var(--dc-rail)!important;border:1px solid var(--dc-line)!important;
+  border-radius:12px!important;box-shadow:0 8px 24px rgba(0,0,0,.6)!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body #options a,body .list-group-item{color:var(--dc-text)!important;}
+body #options a:hover,body .list-group-item:hover{background:var(--dc-hover)!important;}
+
+/* ---------- Tiroirs / panneaux (gris Discord) ---------- */
+body .drawer-content,
+body #left-nav-panel,
+body #right-nav-panel,
+body #character_popup,
+body #world_popup{
+  background:var(--dc-panel)!important;
+  border:none!important;border-color:var(--dc-line)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.6)!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body .inline-drawer-header{border-bottom:1px solid var(--dc-line);}
+body .inline-drawer-toggle .inline-drawer-icon{color:var(--dc-muted);}
+body h3,body h4,body h5{color:#f2f3f5;}
+body .standoutHeader{color:#f2f3f5;}
+
+/* Liste des personnages / groupes : sélection comme les salons Discord */
+body #rm_print_characters_block .character_select,
+body #rm_print_characters_block .group_select,
+body .group_member{border-radius:8px!important;border:none!important;}
+body #rm_print_characters_block .character_select:hover,
+body #rm_print_characters_block .group_select:hover,
+body .group_member:hover{background:var(--dc-hover)!important;}
+body #rm_print_characters_block .avatar:not(.avatar_collage) img,
+body .group_member .avatar:not(.avatar_collage) img,
+body #rm_print_characters_block .avatar{border-radius:50%!important;}
+body #rm_print_characters_block .avatar.avatar_collage{overflow:hidden!important;}
+body #rm_print_characters_block .avatar.avatar_collage img{border-radius:0!important;}
+
+/* Champs de texte */
+body .text_pole,
+body textarea:not(#send_textarea):not(.edit_textarea),
+body select{
+  background-color:var(--dc-field)!important;color:var(--dc-text)!important;
+  border:1px solid #0b0c0e!important;border-radius:8px!important;
+}
+body .text_pole:focus,body textarea:not(#send_textarea):focus{border-color:var(--dc-blurple)!important;}
+
+/* Boutons */
+body .menu_button{
+  background-color:var(--dc-hover)!important;color:var(--dc-text)!important;
+  border:none!important;border-radius:8px!important;filter:none!important;
+}
+body .menu_button:hover,body .menu_button.active{background-color:#35373e!important;}
+body .menu_button.toggled,
+body .menu_button.toggleable.toggled,
+body .menu_button.api_button,
+body .popup .popup-button-ok{background-color:var(--dc-blurple)!important;color:#fff!important;}
+
+/* Cases à cocher blurple */
+body input[type="checkbox"]{
+  background-color:var(--dc-field)!important;border:1px solid #4e5058!important;outline:none!important;
+  border-radius:4px!important;box-shadow:none!important;filter:none!important;
+}
+body input[type="checkbox"]:checked{
+  background-color:var(--dc-blurple)!important;border-color:var(--dc-blurple)!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")!important;
+  background-size:85% 85%!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+body input[type="checkbox"]::before{display:none!important;}
+
+/* Curseurs blurple */
+body input[type="range"]{
+  background:#4e5058!important;box-shadow:none!important;filter:none!important;accent-color:var(--dc-blurple);
+}
+body input[type="range"]::-webkit-slider-thumb{
+  background:#ffffff!important;border:3px solid var(--dc-blurple)!important;
+}
+body input[type="range"]::-moz-range-thumb{background:#ffffff;border:3px solid var(--dc-blurple);}
+
+/* Popups */
+body .popup,body dialog.popup{
+  background:var(--dc-panel)!important;color:var(--dc-text)!important;
+  border:1px solid var(--dc-line)!important;border-radius:14px!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+
+/* Notifications */
+body #toast-container > div{
+  background-color:#111214!important;border:1px solid var(--dc-line)!important;border-radius:10px!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.6)!important;opacity:1!important;
+}
